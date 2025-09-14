@@ -2,7 +2,7 @@ services:
   # PostgreSQL для Hive Metastore
   postgres:
     image: postgres:13
-    container_name: postgres-metastore
+    container_name: postgr
     hostname: postgres
     environment:
       POSTGRES_DB: metastore_db
@@ -59,7 +59,7 @@ services:
 
   hive-metastore:
     image: apache/hive:4.0.0
-    container_name: hive-metastore
+    container_name: hive
     environment:
       - SKIP_SCHEMA_INIT=true  # Критически важно!
     ports:
