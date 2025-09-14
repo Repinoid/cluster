@@ -93,6 +93,57 @@ services:
       - hive-metastore
       - namenode
 
+  minio:
+    image: 'minio/minio:latest'
+    hostname: minio
+    container_name: minio
+    ports:
+      - '29000:9000'
+      - '29001:9001'
+    volumes:
+      - minio-data:/data
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: mpassword
+      MINIO_SERVER_URL: http://minio:9000
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 20s
+      timeout: 10s
+      retries: 8
+      start_period: 30s
+    command: server --console-address ":9001" /data
+    networks:
+      - hive-network
+
+  create-buckets:
+    image: minio/mc:latest
+    container_name: cr_tiny
+    entrypoint: >
+      /bin/sh -c " until mc alias set myminio http://minio:9000 minio mpassword; do
+        echo 'Setting alias...'
+        sleep 2
+      done
+
+      if mc ls myminio/tiny > /dev/null 2>&1; then
+        echo 'Bucket tiny already exists'
+      else
+        mc mb myminio/tiny
+        echo 'Bucket tiny created'
+      fi
+
+      if mc ls myminio/hive > /dev/null 2>&1; then
+        echo 'Bucket hive already exists'
+      else
+        mc mb myminio/hive
+        echo 'Bucket hive created'
+      fi "
+    depends_on:
+      - minio
+    networks:
+      - hive-network
+
+
 volumes:
   postgres_data:
     driver: local
@@ -101,6 +152,8 @@ volumes:
   datanode_data:
     driver: local
   warehouse_data:
+    driver: local
+  minio-data:
     driver: local
 
 networks:
