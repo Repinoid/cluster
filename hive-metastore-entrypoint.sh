@@ -9,7 +9,12 @@ POSTGRES_DRIVER="org.postgresql.Driver"
 POSTGRES_USER="hive"
 POSTGRES_PASSWORD="hivepassword"
 
-# Запуск Hive Metastore с явным указанием PostgreSQL
+# Инициализация схемы, если SKIP_SCHEMA_INIT не равен "true"
+if [ "$SKIP_SCHEMA_INIT" != "true" ]; then
+  schematool -initSchema -dbType postgres
+fi
+
+# Запуск Hive Metastore с указанными конфигурациями
 exec /opt/hive/bin/hive --service metastore \
   -hiveconf javax.jdo.option.ConnectionURL="$POSTGRES_URL" \
   -hiveconf javax.jdo.option.ConnectionDriverName="$POSTGRES_DRIVER" \
@@ -18,4 +23,3 @@ exec /opt/hive/bin/hive --service metastore \
   -hiveconf hive.metastore.schema.verification=false \
   -hiveconf hive.metastore.warehouse.dir="hdfs://namenode:9000/user/hive/warehouse" \
   -hiveconf datanucleus.schema.autoCreateAll=true
-  

@@ -54,13 +54,15 @@
     <value>hdfs://namenode:9000</value>
     <description>Default filesystem URI</description>
   </property>
-</configuration>
 
-<property>
-  <name>datanucleus.schema.autoCreateTables</name>
-  <value>true</value>
-</property>
-<property>
-  <name>datanucleus.schema.autoCreateTablesIfNotExist</name>
-  <value>true</value>
-</property>
+  <property>
+    <name>datanucleus.schema.autoCreateTables</name>
+    <value>true</value>
+  </property>
+
+  <property>
+    <name>datanucleus.schema.autoCreateTablesIfNotExist</name>
+    <value>true</value>
+  </property>
+
+</configuration>
