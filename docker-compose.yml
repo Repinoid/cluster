@@ -1,0 +1,149 @@
+services:
+  # PostgreSQL для Hive Metastore
+  postgres:
+    image: postgres:13
+    container_name: postgres-metastore
+    hostname: postgres
+    environment:
+      POSTGRES_DB: metastore_db
+      POSTGRES_USER: hive
+      POSTGRES_PASSWORD: hivepassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - hive-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hive -d metastore_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Hadoop Namenode
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    container_name: namenode
+    hostname: namenode
+    environment:
+      - CLUSTER_NAME=hadoop-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - namenode_data:/hadoop/dfs/name
+    ports:
+      - "9870:9870"  # Namenode Web UI
+      - "9000:9000"  # HDFS
+    networks:
+      - hive-network
+    env_file:
+      - ./hadoop.env
+
+  # Hadoop Datanode
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    container_name: datanode
+    hostname: datanode
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - datanode_data:/hadoop/dfs/data
+    ports:
+      - "9864:9864"  # Datanode Web UI
+    networks:
+      - hive-network
+    depends_on:
+      - namenode
+    env_file:
+      - ./hadoop.env
+
+  hive-metastore:
+    image: apache/hive:4.0.0
+    container_name: hive-metastore
+    environment:
+      - SKIP_SCHEMA_INIT=true  # Критически важно!
+    ports:
+      - "9083:9083"
+    volumes:
+      - ./postgresql-42.5.1.jar:/opt/hive/lib/postgresql.jar
+      - ./hive-metastore-entrypoint.sh:/entrypoint.sh
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]  # Полная замена entrypoint
+    networks:
+      - hive-network
+    depends_on:
+      - postgres
+      - namenode
+
+
+  # hive-metastore:
+  #   image: apache/hive:4.0.0
+  #   container_name: hive-metastore
+  #   hostname: hive-metastore
+  #   environment:
+  #     - SERVICE_NAME=metastore
+  #     - DB_TYPE=postgres
+  #     - SKIP_SCHEMA_INIT=true
+  #   ports:
+  #     - "9083:9083"
+  #   volumes:
+  #     - ./postgresql-42.5.1.jar:/opt/hive/lib/postgresql.jar
+  #     - ./hive-metastore-entrypoint.sh:/entrypoint.sh
+  #   command: ["/entrypoint.sh"]
+  #   networks:
+  #     - hive-network
+  #   depends_on:
+  #     - postgres
+  #     - namenode
+
+  # HiveServer2
+  hiveserver2:
+    image: apache/hive:4.0.0
+    container_name: hiveserver2
+    hostname: hiveserver2
+    environment:
+      SERVICE_NAME: hiveserver2
+      SERVICE_OPTS: >
+        -Dhive.metastore.uris=thrift://hive-metastore:9083
+        -Dhive.server2.thrift.port=10000
+      IS_RESUME: "true"
+    ports:
+      - "10000:10000"  # HiveServer2
+      - "10002:10002"  # HiveServer2 Web UI
+    volumes:
+      - warehouse_data:/opt/hive/data/warehouse
+      - ./hive-site.xml:/opt/hive/conf/hive-site.xml
+    networks:
+      - hive-network
+    depends_on:
+      - hive-metastore
+
+  # hue:
+  #   image: gethue/hue:latest
+  #   container_name: hue
+  #   environment:
+  #     - HUE_SECRET_KEY=mysecretkey
+  #     - HUE_DESKTOP_DB_NAME=/usr/share/hue/desktop.db
+  #     - HUE_DESKTOP_DB_ENGINE=sqlite3
+  #   ports:
+  #     - "8888:8888"
+  #   volumes:
+  #     - hue_data:/usr/share/hue
+  #   networks:
+  #     - hive-network
+  #   depends_on:
+  #     - hiveserver2
+  #     - namenode
+
+volumes:
+  postgres_data:
+    driver: local
+  namenode_data:
+    driver: local
+  datanode_data:
+    driver: local
+  warehouse_data:
+    driver: local
+
+networks:
+  hive-network:
+    driver: bridge
