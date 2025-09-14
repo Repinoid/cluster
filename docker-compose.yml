@@ -74,65 +74,24 @@ services:
       - postgres
       - namenode
 
-
-  # hive-metastore:
-  #   image: apache/hive:4.0.0
-  #   container_name: hive-metastore
-  #   hostname: hive-metastore
-  #   environment:
-  #     - SERVICE_NAME=metastore
-  #     - DB_TYPE=postgres
-  #     - SKIP_SCHEMA_INIT=true
-  #   ports:
-  #     - "9083:9083"
-  #   volumes:
-  #     - ./postgresql-42.5.1.jar:/opt/hive/lib/postgresql.jar
-  #     - ./hive-metastore-entrypoint.sh:/entrypoint.sh
-  #   command: ["/entrypoint.sh"]
-  #   networks:
-  #     - hive-network
-  #   depends_on:
-  #     - postgres
-  #     - namenode
-
-  # HiveServer2
-  hiveserver2:
-    image: apache/hive:4.0.0
-    container_name: hiveserver2
-    hostname: hiveserver2
-    environment:
-      SERVICE_NAME: hiveserver2
-      SERVICE_OPTS: >
-        -Dhive.metastore.uris=thrift://hive-metastore:9083
-        -Dhive.server2.thrift.port=10000
-      IS_RESUME: "true"
+  # Trino (замена HiveServer2)
+  trino:
+    image: trinodb/trino:latest
+    container_name: trino
+    hostname: trino
     ports:
-      - "10000:10000"  # HiveServer2
-      - "10002:10002"  # HiveServer2 Web UI
+      - "8080:8080"  # Trino Web UI
     volumes:
+      - ./trino-config:/etc/trino
+      - ./trino-data:/var/trino/data
+      - ./trino-entrypoint.sh:/entrypoint.sh
       - warehouse_data:/opt/hive/data/warehouse
-      - ./hive-site.xml:/opt/hive/conf/hive-site.xml
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]      
     networks:
       - hive-network
     depends_on:
       - hive-metastore
-
-  # hue:
-  #   image: gethue/hue:latest
-  #   container_name: hue
-  #   environment:
-  #     - HUE_SECRET_KEY=mysecretkey
-  #     - HUE_DESKTOP_DB_NAME=/usr/share/hue/desktop.db
-  #     - HUE_DESKTOP_DB_ENGINE=sqlite3
-  #   ports:
-  #     - "8888:8888"
-  #   volumes:
-  #     - hue_data:/usr/share/hue
-  #   networks:
-  #     - hive-network
-  #   depends_on:
-  #     - hiveserver2
-  #     - namenode
+      - namenode
 
 volumes:
   postgres_data:
