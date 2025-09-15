@@ -82,10 +82,12 @@ services:
     ports:
       - "8080:8080"  # Trino Web UI
     volumes:
-      - ./trino-config:/etc/trino
+      - ./etc:/etc/trino
       - ./trino-data:/var/trino/data
       - ./trino-entrypoint.sh:/entrypoint.sh
       - warehouse_data:/opt/hive/data/warehouse
+    environment:
+      - TRINO_NODE_ID=trino      
     entrypoint: ["/bin/bash", "/entrypoint.sh"]      
     networks:
       - hive-network
