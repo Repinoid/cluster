@@ -67,7 +67,10 @@ services:
     volumes:
       - ./postgresql-42.5.1.jar:/opt/hive/lib/postgresql.jar
       - ./hive-metastore-entrypoint.sh:/entrypoint.sh
-    entrypoint: ["/bin/sh", "/entrypoint.sh"]  # Полная замена entrypoint
+      - ./jars/hadoop-aws-3.2.1.jar:/opt/hive/lib/hadoop-aws-3.2.1.jar
+      - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar
+      - ./core-site.xml:/opt/hadoop/conf/core-site.xml       
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]  
     networks:
       - hive-network
     depends_on:
@@ -86,6 +89,8 @@ services:
       - ./trino-data:/var/trino/data
       - ./trino-entrypoint.sh:/entrypoint.sh
       - warehouse_data:/opt/hive/data/warehouse
+      - ./jars/hadoop-aws-3.2.1.jar:/usr/lib/trino/plugin/hive/hadoop-aws-3.2.1.jar
+      - ./jars/aws-java-sdk-bundle-1.11.375.jar:/usr/lib/trino/plugin/hive/aws-java-sdk-bundle-1.11.375.jar      
     environment:
       - TRINO_NODE_ID=trino      
     entrypoint: ["/bin/bash", "/entrypoint.sh"]      
