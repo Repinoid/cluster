@@ -26,14 +26,14 @@
     <name>fs.s3a.impl</name>
     <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
   </property>
-  
+
   <property>
       <name>hive.metastore.pre.event.listeners</name>
       <value>org.apache.hadoop.hive.ql.security.authorization.AuthorizationPreEventListener</value>
   </property>
-  <property>
+  <!-- <property>
       <name>hive.security.metastore.authorization.manager</name>
       <value>org.apache.hadoop.hive.ql.security.authorization.StorageBasedAuthorizationProvider</value>
-  </property>
+  </property> -->
 
 </configuration>
