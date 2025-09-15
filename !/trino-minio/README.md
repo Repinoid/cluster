@@ -121,8 +121,7 @@ Back in the terminal create the minio.tiny SCHEMA. This will be the first call
 to the metastore to save the location of the S3 schema location in MinIO.
 
 ```
-CREATE SCHEMA minio.tiny
-WITH (location = 's3a://tiny/');
+CREATE SCHEMA minio.tiny WITH (location = 's3a://tiny/');
 ```
 
 Now that we have a SCHEMA that references the bucket where we store our tables 
