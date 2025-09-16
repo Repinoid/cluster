@@ -139,6 +139,8 @@ services:
         echo 'Bucket tiny created'
       fi
 
+      mc anonymous set public myminio/tiny
+      
       if mc ls myminio/hive > /dev/null 2>&1; then
         echo 'Bucket hive already exists'
       else
