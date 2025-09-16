@@ -55,4 +55,14 @@
       </description>
 </property>
 
+<property>
+    <name>fs.s3a.aws.credentials.provider</name>
+    <value>org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider</value>
+</property>
+
+<property>
+    <name>fs.s3a.log.level</name>
+    <value>DEBUG</value>
+</property>
+
 </configuration>
