@@ -1,0 +1,8 @@
+https://docs.arenadata.io/en/ADH/current/how-to/trino/trino-connector-hive.html
+
+IMPORTANT
+To allow Trino to write to a Hive database, the user name specified while connecting to Trino (for example, via Trino CLI tool or DBeaver) 
+must match the Unix user on the ADH host with sufficient permissions to write to Hive warehouse directories in HDFS. Otherwise, you may observe a similar error:
+
+Failed to create external path hdfs://adh/apps/hive/warehouse/trino_demo_schema1.db for database trino_demo_schema1. 
+This may result in access not being allowed if the StorageBasedAuthorizationProvider is enabled: null
