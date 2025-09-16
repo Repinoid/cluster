@@ -4,8 +4,8 @@
 export METASTORE_DB_HOSTNAME=postgres
 export METASTORE_DB_PORT=5432
 export METASTORE_DB_NAME=metastore_db
-export METASTORE_DB_USER=hive
-export METASTORE_DB_PASSWORD=hivepassword
+export METASTORE_DB_USER=muser
+export METASTORE_DB_PASSWORD=mpassword
 
 # Принудительная инициализация PostgreSQL
 /opt/hive/bin/schematool -initSchema -dbType postgres \

@@ -6,8 +6,8 @@ export SKIP_SCHEMA_INIT=true
 # Параметры подключения к PostgreSQL
 POSTGRES_URL="jdbc:postgresql://postgres:5432/metastore_db"
 POSTGRES_DRIVER="org.postgresql.Driver"
-POSTGRES_USER="hive"
-POSTGRES_PASSWORD="hivepassword"
+POSTGRES_USER="muser"
+POSTGRES_PASSWORD="mpassword"
 
 # Инициализация схемы, если SKIP_SCHEMA_INIT не равен "true"
 if [ "$SKIP_SCHEMA_INIT" != "true" ]; then

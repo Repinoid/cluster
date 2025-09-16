@@ -7,7 +7,7 @@
   </property>
   <property>
     <name>fs.s3a.access.key</name>
-    <value>minio</value>
+    <value>muser</value>
   </property>
   <property>
     <name>fs.s3a.secret.key</name>
