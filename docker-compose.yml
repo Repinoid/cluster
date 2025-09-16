@@ -16,68 +16,74 @@ services:
     networks:
       - hive-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U hive -d metastore_db"]
+      test: ["CMD-SHELL", "pg_isready -U muser -d metastore_db"]
       interval: 30s
       timeout: 10s
       retries: 3
 
-  # Hadoop Namenode
+  # Hadoop Namenode (обновленная версия)
   namenode:
-    image: bde2020/hadoop-namenode:2.0.0-hadoop3.2.1-java8
+    image: apache/hadoop:3.3.6
     container_name: namenode
     hostname: namenode
+    command: ["hdfs", "namenode"]
     environment:
-      - CLUSTER_NAME=hadoop-cluster
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - CORE_CONF_hadoop_http_staticuser_user=root
+      - HDFS_CONF_dfs_namenode_rpc-address=namenode:8020
+      - HDFS_CONF_dfs_replication=1
+      - HDFS_CONF_dfs_permissions_enabled=false
     volumes:
-      - namenode_data:/hadoop/dfs/name
+      - namenode_data:/tmp/hadoop-root/dfs/name
     ports:
-      - "9870:9870"  # Namenode Web UI
+      - "9870:9870"  # Web UI
+      - "8020:8020"  # RPC
       - "9000:9000"  # HDFS
     networks:
       - hive-network
-    env_file:
-      - ./hadoop.env
 
-  # Hadoop Datanode
+  # Hadoop Datanode (обновленная версия)
   datanode:
-    image: bde2020/hadoop-datanode:2.0.0-hadoop3.2.1-java8
+    image: apache/hadoop:3.3.6
     container_name: datanode
     hostname: datanode
+    command: ["hdfs", "datanode"]
     environment:
       - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_datanode_address=datanode:9866
+      - HDFS_CONF_dfs_datanode_ipc_address=datanode:9867
+      - HDFS_CONF_dfs_datanode_http_address=datanode:9864
     volumes:
-      - datanode_data:/hadoop/dfs/data
+      - datanode_data:/tmp/hadoop-root/dfs/data
     ports:
       - "9864:9864"  # Datanode Web UI
     networks:
       - hive-network
     depends_on:
       - namenode
-    env_file:
-      - ./hadoop.env
 
+  # Hive Metastore с обновленными версиями JAR
   hive-metastore:
     image: apache/hive:4.0.0
     container_name: hive
     environment:
-      - SKIP_SCHEMA_INIT=true  # Критически важно!
+      - SKIP_SCHEMA_INIT=true
     ports:
       - "9083:9083"
     volumes:
       - ./postgresql-42.5.1.jar:/opt/hive/lib/postgresql.jar
       - ./hive-metastore-entrypoint.sh:/entrypoint.sh
-      - ./jars/hadoop-aws-3.2.1.jar:/opt/hive/lib/hadoop-aws-3.2.1.jar
-      - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar
-      - ./core-site.xml:/opt/hadoop/conf/core-site.xml       
-    entrypoint: ["/bin/sh", "/entrypoint.sh"]  
+      - ./jars/hadoop-aws-3.3.6.jar:/opt/hive/lib/hadoop-aws-3.3.6.jar
+      - ./jars/aws-java-sdk-bundle-1.12.367.jar:/opt/hive/lib/aws-java-sdk-bundle-1.12.367.jar
+      - ./core-site.xml:/opt/hadoop/etc/hadoop/core-site.xml
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]
     networks:
       - hive-network
     depends_on:
       - postgres
       - namenode
 
-  # Trino (замена HiveServer2)
+  # Trino с обновленными версиями JAR
   trino:
     image: trinodb/trino:latest
     container_name: trino
@@ -89,19 +95,20 @@ services:
       - ./trino-data:/var/trino/data
       - ./trino-entrypoint.sh:/entrypoint.sh
       - warehouse_data:/opt/hive/data/warehouse
-      - ./jars/hadoop-aws-3.2.1.jar:/usr/lib/trino/plugin/hive/hadoop-aws-3.2.1.jar
-      - ./jars/aws-java-sdk-bundle-1.11.375.jar:/usr/lib/trino/plugin/hive/aws-java-sdk-bundle-1.11.375.jar      
+      - ./jars/hadoop-aws-3.3.6.jar:/usr/lib/trino/plugin/hive/hadoop-aws-3.3.6.jar
+      - ./jars/aws-java-sdk-bundle-1.12.367.jar:/usr/lib/trino/plugin/hive/aws-java-sdk-bundle-1.12.367.jar
     environment:
-      - TRINO_NODE_ID=trino      
-    entrypoint: ["/bin/bash", "/entrypoint.sh"]      
+      - TRINO_NODE_ID=trino
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
     networks:
       - hive-network
     depends_on:
       - hive-metastore
       - namenode
 
+  # MinIO
   minio:
-    image: 'minio/minio:latest'
+    image: minio/minio:latest
     hostname: minio
     container_name: minio
     ports:
@@ -114,7 +121,7 @@ services:
       MINIO_ROOT_PASSWORD: mpassword
       MINIO_SERVER_URL: http://minio:9000
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 20s
       timeout: 10s
       retries: 8
@@ -123,11 +130,13 @@ services:
     networks:
       - hive-network
 
+  # Service для создания бакетов MinIO
   create-buckets:
     image: minio/mc:latest
     container_name: cr_tiny
     entrypoint: >
-      /bin/sh -c " until mc alias set myminio http://minio:9000 muser mpassword; do
+      /bin/sh -c "
+      until mc alias set myminio http://minio:9000 muser mpassword; do
         echo 'Setting alias...'
         sleep 2
       done
@@ -146,12 +155,12 @@ services:
       else
         mc mb myminio/hive
         echo 'Bucket hive created'
-      fi "
+      fi
+      "
     depends_on:
       - minio
     networks:
       - hive-network
-
 
 volumes:
   postgres_data:

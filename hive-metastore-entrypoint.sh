@@ -10,8 +10,8 @@ POSTGRES_USER="muser"
 POSTGRES_PASSWORD="mpassword"
 
 # 🔧 КРИТИЧЕСКИ ВАЖНО: Добавляем JAR-файлы для работы с S3A в classpath Hadoop
-# Указываем пути к JAR-файлам, которые смонтированы в контейнер
-export HADOOP_CLASSPATH="/opt/hive/lib/hadoop-aws-3.2.1.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar"
+# Указываем пути к JAR-файлам, которые смонтированы в контейнер (ОБНОВЛЕННЫЕ ВЕРСИИ)
+export HADOOP_CLASSPATH="/opt/hive/lib/hadoop-aws-3.3.6.jar:/opt/hive/lib/aws-java-sdk-bundle-1.12.367.jar"
 
 # Инициализация схемы, если SKIP_SCHEMA_INIT не равен "true"
 if [ "$SKIP_SCHEMA_INIT" != "true" ]; then
