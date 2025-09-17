@@ -53,6 +53,9 @@ services:
     container_name: init-metastore
     depends_on:
       - metastore-db
+    volumes:
+      - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml  
+      - ./postgresql-driver.jar:/opt/hive/lib/postgresql.jar  
     command: >
       /opt/hive/bin/schematool -initSchema
       -dbType postgres
@@ -61,7 +64,8 @@ services:
       -url jdbc:postgresql://metastore-db:5432/metastore
     networks:
       - trino-network
-    restart: on-failure
+    restart: on-failure      
+
 
   # Hive Metastore сервис
   metastore:
@@ -79,6 +83,7 @@ services:
     volumes:
       - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
       - ./metastore/core-site.xml:/opt/hadoop/conf/core-site.xml
+      - ./postgresql-driver.jar:/opt/hive/lib/postgresql.jar  # ← ДОБАВЬТЕ ДРАЙВЕР      
     command: /opt/hive/bin/start-metastore -p 9083
     networks:
       - trino-network
@@ -105,4 +110,3 @@ volumes:
 networks:
   trino-network:
     driver: bridge
-    
