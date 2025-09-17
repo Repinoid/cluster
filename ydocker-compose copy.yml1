@@ -1,0 +1,183 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_DB: metastore_db
+      POSTGRES_USER: muser
+      POSTGRES_PASSWORD: mpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - hive-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U muser -d metastore_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  namenode:
+    image: apache/hadoop:3.3.6
+    container_name: namenode
+    hostname: namenode
+    command: ["hdfs", "namenode"]  # Явное указание команды
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_CONF_dfs_namenode_rpc-address=namenode:8020
+      - HDFS_CONF_dfs_replication=1
+      - HDFS_CONF_dfs_permissions=false  # Для тестовых сред
+      - ENSURE_NAMENODE_DIR=/tmp/hadoop-root/dfs/name  # Обеспечивает существование директории:cite[5]
+    volumes:
+      - namenode_data:/tmp/hadoop-root/dfs/name  # Соответствует ENSURE_NAMENODE_DIR
+    ports:
+      - "9870:9870"  # Web UI
+      - "8020:8020"  # RPC
+      - "9000:9000"  # HDFS
+    networks:
+      - hive-network
+    env_file:
+      - ./config  # Единый файл конфигурации для всех Hadoop сервисов:cite[5]
+
+  datanode:
+    image: apache/hadoop:3.3.6
+    container_name: datanode
+    hostname: datanode
+    command: ["hdfs", "datanode"]  # Явное указание команды
+    environment:
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    volumes:
+      - datanode_data:/tmp/hadoop-root/dfs/data  # Стандартный путь данных DataNode
+    ports:
+      - "9864:9864"  # Datanode Web UI
+    networks:
+      - hive-network
+    depends_on:
+      - namenode
+    env_file:
+      - ./config  # Единый файл конфигурации:cite[5]
+
+  # ResourceManager и NodeManager для YARN (опционально, но рекомендуется)
+  resourcemanager:
+    image: apache/hadoop:3.3.6
+    container_name: resourcemanager
+    hostname: resourcemanager
+    command: ["yarn", "resourcemanager"]
+    ports:
+      - "8088:8088"  # YARN Web UI
+    networks:
+      - hive-network
+    depends_on:
+      - namenode
+    env_file:
+      - ./config
+
+  nodemanager:
+    image: apache/hadoop:3.3.6
+    container_name: nodemanager
+    hostname: nodemanager
+    command: ["yarn", "nodemanager"]
+    networks:
+      - hive-network
+    depends_on:
+      - resourcemanager
+      - namenode
+    env_file:
+      - ./config
+
+  hive-metastore:
+    image: apache/hive:4.0.0
+    container_name: hive-metastore
+    environment:
+      - DB_TYPE=postgres
+      - DB_HOST=postgres
+      - DB_NAME=metastore_db
+      - DB_USER=muser
+      - DB_PASS=mpassword
+      - SKIP_SCHEMA_INIT=false  # Позволяет контейнеру самому инициализировать схему
+    ports:
+      - "9083:9083"
+    volumes:
+      - ./jars/postgresql-42.5.1.jar:/opt/hive/lib/postgresql.jar  # Актуальный драйвер PostgreSQL
+      # Убедитесь, что hadoop-aws и aws-java-sdk совместимы с Hadoop 3.3.6 и Hive 4.0.0
+      - ./jars/hadoop-aws-3.3.6.jar:/opt/hive/lib/hadoop-aws.jar
+      - ./jars/aws-java-sdk-bundle-1.12.367.jar:/opt/hive/lib/aws-java-sdk-bundle.jar
+      # Для интеграции с MinIO (S3-совместимое хранилище) может потребоваться core-site.xml
+      - ./core-site.xml:/opt/hive/conf/core-site.xml
+    networks:
+      - hive-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      namenode:
+        condition: service_started
+    # Entrypoint скрипт может не потребоваться, если образ поддерживает переменные окружения
+
+  trino:
+    image: trinodb/trino:latest
+    container_name: trino
+    hostname: trino
+    ports:
+      - "8080:8080"  # Trino Web UI
+    volumes:
+      - ./trino-config:/etc/trino  # Каталог с конфигурацией Trino (catalog.properties, etc.)
+      - ./jars/hadoop-aws-3.3.6.jar:/usr/lib/trino/plugin/hive/hadoop-aws.jar
+      - ./jars/aws-java-sdk-bundle-1.12.367.jar:/usr/lib/trino/plugin/hive/aws-java-sdk-bundle.jar
+    environment:
+      - TRINO_NODE_ID=trino-node-1
+    networks:
+      - hive-network
+    depends_on:
+      - hive-metastore
+      - namenode
+
+  minio:
+    image: minio/minio:latest
+    hostname: minio
+    container_name: minio
+    ports:
+      - '29000:9000'  # API порт
+      - '29001:9001'  # Console порт
+    volumes:
+      - minio_data:/data
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_SERVER_URL: http://minio:9000
+    command: server --console-address ":9001" /data
+    networks:
+      - hive-network
+
+  create-buckets:
+    image: minio/mc:latest
+    container_name: create-buckets
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set myminio http://minio:9000 minioadmin minioadmin; do
+        echo 'Waiting for MinIO...'
+        sleep 2
+      done
+      mc mb myminio/tiny --ignore-existing
+      mc mb myminio/hive --ignore-existing
+      mc anonymous set public myminio/tiny
+      mc anonymous set public myminio/hive
+      echo 'Buckets tiny and hive are ready.'
+      "
+    depends_on:
+      - minio
+    networks:
+      - hive-network
+
+volumes:
+  postgres_data:
+  namenode_data:
+  datanode_data:
+  minio_data:
+  # warehouse_data может быть не нужен, если данные в HDFS/MinIO
+
+networks:
+  hive-network:
+    driver: bridge
