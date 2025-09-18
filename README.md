@@ -1,3 +1,11 @@
+docker exec -it trino sh -c 'ls -l /usr/lib/trino/plugin/hive/tr*.jar'
+
+docker exec -it trino sh -c 'jar tf /usr/lib/trino/plugin/hive/lib/'
+
+jar tf /path/to/hadoop-aws-3.3.6.jar | grep S3AFileSystem
+
+/usr/lib/trino/plugin/hive/lib/
+
 unzip trino-hive-476.zip -d trino-hive
 
 # Создайте директорию для плагина Hive

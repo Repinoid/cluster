@@ -101,19 +101,9 @@ services:
     ports:
       - "8080:8080"  # Trino UI
     volumes:
-      - ./trino-hive-plugin/trino-hive-476.jar:/usr/lib/trino/plugin/hive/trino-hive-476.jar
+      # - ./trino-hive-plugin/trino-hive-476.jar:/usr/lib/trino/plugin/hive/trino-hive-476.jar
       - ./trino-hive-plugin/lib/:/usr/lib/trino/plugin/hive/lib/
       - ./etc:/etc/trino  # Каталог с конфигурацией Trino (catalog.properties, etc.)
-    # volumes:
-    #   - ./etc:/etc/trino  # Каталог с конфигурацией Trino (catalog.properties, etc.)
-    #   - ./jars:/usr/lib/trino/plugin/hive
-    #   - ./jars/lib:/usr/lib/trino/plugin/hive/lib
-    #   # - ./conf/hive.properties:/etc/trino/catalog/hive.properties
-      # - ./conf/postgres.properties:/etc/trino/catalog/postgres.properties
-      # - ./jars:/usr/lib/trino/plugin/hive
-      # - ./jars/lib:/usr/lib/trino/plugin/hive/lib
-      # # - ./jars/hadoop-aws-3.3.6.jar:/usr/lib/trino/plugin/hive/hadoop-aws.jar
-      # - ./jars/aws-java-sdk-bundle-1.12.367.jar:/usr/lib/trino/plugin/hive/aws-java-sdk-bundle.jar      
     networks:
       - trino-network
 
