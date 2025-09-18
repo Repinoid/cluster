@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # MinIO для объектного хранилища
   minio:
@@ -47,29 +45,25 @@ services:
     networks:
       - trino-network
 
-  # Инициализация схемы Hive Metastore
   init-metastore:
-    image: apache/hive:4.0.0-beta-1
+    image: apache/hive:3.1.3
     container_name: init-metastore
     depends_on:
       - metastore-db
     volumes:
-      - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml  
-      - ./postgresql-driver.jar:/opt/hive/lib/postgresql.jar  
-    command: >
-      /opt/hive/bin/schematool -initSchema
-      -dbType postgres
-      -userName hive
-      -passWord hivepassword
-      -url jdbc:postgresql://metastore-db:5432/metastore
+      - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
+      - ./postgresql-driver.jar:/opt/hive/lib/postgresql.jar
+      - ./custom-entrypoint.sh:/custom-entrypoint.sh
+    entrypoint: ["/bin/sh", "/custom-entrypoint.sh"]  # ← ПОЛНОСТЬЮ СВОЙ ENTRYPOINT
     networks:
       - trino-network
-    restart: on-failure      
+    restart: on-failure
+    
 
 
   # Hive Metastore сервис
   metastore:
-    image: apache/hive:4.0.0-beta-1
+    image: apache/hive:3.1.3
     container_name: metastore
     depends_on:
       - init-metastore
