@@ -101,10 +101,14 @@ services:
     ports:
       - "8080:8080"  # Trino UI
     volumes:
+      - ./trino-hive-plugin/trino-hive-476.jar:/usr/lib/trino/plugin/hive/trino-hive-476.jar
+      - ./trino-hive-plugin/lib/:/usr/lib/trino/plugin/hive/lib/
       - ./etc:/etc/trino  # Каталог с конфигурацией Trino (catalog.properties, etc.)
-      - ./jars:/usr/lib/trino/plugin/hive
-      - ./jars/lib:/usr/lib/trino/plugin/hive/lib
-      # - ./conf/hive.properties:/etc/trino/catalog/hive.properties
+    # volumes:
+    #   - ./etc:/etc/trino  # Каталог с конфигурацией Trino (catalog.properties, etc.)
+    #   - ./jars:/usr/lib/trino/plugin/hive
+    #   - ./jars/lib:/usr/lib/trino/plugin/hive/lib
+    #   # - ./conf/hive.properties:/etc/trino/catalog/hive.properties
       # - ./conf/postgres.properties:/etc/trino/catalog/postgres.properties
       # - ./jars:/usr/lib/trino/plugin/hive
       # - ./jars/lib:/usr/lib/trino/plugin/hive/lib
