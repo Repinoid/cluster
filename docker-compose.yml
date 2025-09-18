@@ -57,7 +57,7 @@ services:
     entrypoint: ["/bin/sh", "/custom-entrypoint.sh"]  # ← ПОЛНОСТЬЮ СВОЙ ENTRYPOINT
     networks:
       - trino-network
-    restart: on-failure
+    # restart: on-failure
     
 
 

@@ -3,8 +3,7 @@ set -e
 
 # Явно указываем использование PostgreSQL
 echo "Forcing PostgreSQL connection..."
-/opt/hive/bin/schematool 
-  -initSchema \
+/opt/hive/bin/schematool -initSchema \
   -dbType postgres \
   -userName hive \
   -passWord hivepassword \
