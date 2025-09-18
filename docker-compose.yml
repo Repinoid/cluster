@@ -26,7 +26,7 @@ services:
       sleep 5;
       /usr/bin/mc alias set localminio http://minio:9000 minioadmin minioadmin;
       /usr/bin/mc mb localminio/tiny;
-      /usr/bin/mc mb localminio/trino-data;
+      /usr/bin/mc mb localminio/trinod;
       exit 0;
       "
     networks:
@@ -51,7 +51,7 @@ services:
     depends_on:
       - metastore-db
     volumes:
-      - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
+      - ./metastore/metastore-site.xml:/opt/hive/conf/hive-site.xml
       - ./postgresql-driver.jar:/opt/hive/lib/postgresql.jar
       - ./custom-entrypoint.sh:/custom-entrypoint.sh
     entrypoint: ["/bin/sh", "/custom-entrypoint.sh"]  # ← ПОЛНОСТЬЮ СВОЙ ENTRYPOINT
