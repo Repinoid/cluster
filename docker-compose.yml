@@ -44,12 +44,23 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - trino-network
+    healthcheck:  # <- Добавьте этот блок
+      test: ["CMD-SHELL", "pg_isready -U hive -d metastore"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    # Необязательно, но хороший тон: явно сообщаем, что сервис зависит от здоровья БД
+    restart: unless-stopped      
 
   init-metastore:
     image: apache/hive:3.1.3
     container_name: init-metastore
-    depends_on:
-      - metastore-db
+    depends_on:  # <- Измените этот блок
+      metastore-db:
+        condition: service_healthy  # Ждем, пока БД не станет "healthy"    
+    # depends_on:
+    #   - metastore-db
     volumes:
       - ./metastore/metastore-site.xml:/opt/hive/conf/hive-site.xml
       - ./postgresql-driver.jar:/opt/hive/lib/postgresql.jar
@@ -64,11 +75,14 @@ services:
     image: apache/hive:3.1.3
     container_name: metastore
     depends_on:
-      - init-metastore  # Ждем завершения инициализации
-      - metastore-db
+      init-metastore:
+        condition: service_completed_successfully
+      metastore-db:
+        condition: service_healthy    
     volumes:
       - ./hive-home:/home/hive  # ← Монтируем директорию
-      - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
+      # - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
+      - ./metastore/metastore-site.xml:/opt/hive/conf/hive-site.xml
       - ./metastore/core-site.xml:/opt/hadoop/conf/core-site.xml
       - ./postgresql-driver.jar:/opt/hive/lib/postgresql.jar
       - ./metastore-entrypoint.sh:/metastore-entrypoint.sh
