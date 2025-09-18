@@ -1,3 +1,20 @@
+unzip trino-hive-476.zip -d trino-hive
+
+# Создайте директорию для плагина Hive
+mkdir -p trino-hive-plugin
+
+# Переместите основной JAR плагина
+mv trino-hive/trino-hive-476/io.trino_trino-hive-476.jar trino-hive-plugin/trino-hive-476.jar
+
+# Создайте директорию lib и переместите все зависимости
+mkdir trino-hive-plugin/lib
+mv trino-hive/trino-hive-476/*.jar trino-hive-plugin/lib/
+
+# Но оставьте основной JAR плагина на своем месте
+mv trino-hive-plugin/lib/io.trino_trino-hive-476.jar trino-hive-plugin/
+
+
+
 # Hive connector over MinIO file storage
 
 ## Introduction 
