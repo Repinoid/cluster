@@ -25,7 +25,7 @@ services:
       /bin/sh -c "
       sleep 5;
       /usr/bin/mc alias set localminio http://minio:9000 minioadmin minioadmin;
-      /usr/bin/mc mb localminio/my-bucket;
+      /usr/bin/mc mb localminio/tiny;
       /usr/bin/mc mb localminio/trino-data;
       exit 0;
       "
