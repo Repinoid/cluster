@@ -45,7 +45,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - trino-network
-    healthcheck:  # <- Добавьте этот блок
+    healthcheck: 
       test: ["CMD-SHELL", "pg_isready -U hive -d metastore"]
       interval: 5s
       timeout: 5s
@@ -57,7 +57,7 @@ services:
   init-metastore:
     image: apache/hive:3.1.3
     container_name: init-metastore
-    depends_on:  # <- Измените этот блок
+    depends_on:  
       metastore-db:
         condition: service_healthy  # Ждем, пока БД не станет "healthy"    
     volumes:
