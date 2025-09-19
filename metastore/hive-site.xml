@@ -28,6 +28,7 @@
   </property>
 
   <!-- Остальные настройки Metastore (JDBC для PostgreSQL и т.д.) -->
+  
   <property>
     <name>javax.jdo.option.ConnectionURL</name>
     <value>jdbc:postgresql://metastore-db:5432/metastore</value>
@@ -44,5 +45,5 @@
     <name>javax.jdo.option.ConnectionPassword</name>
     <value>hivepassword</value>
   </property>
-  <!-- ... другие свойства ... -->
+  
 </configuration>
