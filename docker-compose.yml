@@ -63,11 +63,11 @@ services:
     # depends_on:
     #   - metastore-db
     volumes:
-      - ./metastore/metastore-site.xml:/opt/hive/conf/hive-site.xml
+      - ./metastore/hive-site.xml:/opt/hive/conf/hive-site.xml
       - ./jars/postgresql-driver.jar:/opt/hive/lib/postgresql.jar
       # - ./jars:/opt/hive/lib/
-      - ./custom-entrypoint.sh:/custom-entrypoint.sh
-    entrypoint: ["/bin/sh", "/custom-entrypoint.sh"]  # ← ПОЛНОСТЬЮ СВОЙ ENTRYPOINT
+      - ./initm-entrypoint.sh:/entrypoint.sh
+    entrypoint: ["/bin/sh", "/entrypoint.sh"]  # ← ПОЛНОСТЬЮ СВОЙ ENTRYPOINT
     networks:
       - trino-network
     # restart: on-failure
@@ -84,7 +84,7 @@ services:
     volumes:
       - ./hive-home:/home/hive  # ← Монтируем директорию
       # - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
-      - ./metastore/metastore-site.xml:/opt/hive/conf/hive-site.xml
+      - ./metastore/hive-site.xml:/opt/hive/conf/hive-site.xml
       - ./metastore/core-site.xml:/opt/hadoop/conf/core-site.xml
       # - ./jars:/opt/hive/lib
       - ./jars/postgresql-driver.jar:/opt/hive/lib/postgresql.jar

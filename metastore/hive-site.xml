@@ -1,0 +1,48 @@
+<configuration>
+  <!-- Минио-specific настройки -->
+  <property>
+    <name>fs.s3a.endpoint</name>
+    <value>http://minio:9000</value> <!-- Используем имя сервиса из docker-compose -->
+  </property>
+  <property>
+    <name>fs.s3a.path.style.access</name>
+    <value>true</value> <!-- Критически важно для MinIO -->
+  </property>
+  <property>
+    <name>fs.s3a.connection.ssl.enabled</name>
+    <value>false</value> <!-- Отключаем SSL, если MinIO использует HTTP -->
+  </property>
+  <property>
+    <name>fs.s3a.access.key</name>
+    <value>minioadmin</value> <!-- Учетные данные MinIO (MINIO_ROOT_USER) -->
+  </property>
+  <property>
+    <name>fs.s3a.secret.key</name>
+    <value>minioadmin</value> <!-- Учетные данные MinIO (MINIO_ROOT_PASSWORD) -->
+  </property>
+
+  <!-- Настройка реализации файловой системы для схемы S3 -->
+  <property>
+    <name>fs.s3a.impl</name>
+    <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
+  </property>
+
+  <!-- Остальные настройки Metastore (JDBC для PostgreSQL и т.д.) -->
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:postgresql://metastore-db:5432/metastore</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>org.postgresql.Driver</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>hive</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>hivepassword</value>
+  </property>
+  <!-- ... другие свойства ... -->
+</configuration>
