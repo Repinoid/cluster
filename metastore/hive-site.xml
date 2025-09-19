@@ -20,11 +20,11 @@
 
   <property>
     <name>fs.s3a.access.key</name>
-    <value>minioadmin</value> <!-- Учетные данные MinIO (MINIO_ROOT_USER) -->
+    <value>muser</value> <!-- Учетные данные MinIO (MINIO_ROOT_USER) -->
   </property>
   <property>
     <name>fs.s3a.secret.key</name>
-    <value>minioadmin</value> <!-- Учетные данные MinIO (MINIO_ROOT_PASSWORD) -->
+    <value>mpassword</value> <!-- Учетные данные MinIO (MINIO_ROOT_PASSWORD) -->
   </property>
 
   <!-- Настройка реализации файловой системы для схемы S3 - работает и без

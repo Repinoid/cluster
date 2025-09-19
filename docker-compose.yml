@@ -7,8 +7,8 @@ services:
       - "9000:9000"  # S3 API
       - "9001:9001"  # Web Console
     environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_ROOT_USER: muser
+      MINIO_ROOT_PASSWORD: mpassword
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
@@ -25,7 +25,7 @@ services:
     entrypoint: >
       /bin/sh -c "
       sleep 5;
-      /usr/bin/mc alias set localminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc alias set localminio http://minio:9000 muser mpassword;
       /usr/bin/mc mb localminio/tiny;
       /usr/bin/mc mb localminio/trinod;
       exit 0;
@@ -80,7 +80,6 @@ services:
     volumes:
       - ./hive-home:/home/hive  # ← Монтируем директорию
       - ./metastore/hive-site.xml:/opt/hive/conf/hive-site.xml
-      - ./metastore/core-site.xml:/opt/hadoop/conf/core-site.xml
 
       # If no aws-java-sdk-bundle-1.11.375.jar  - 
       # Query 20250919_120728_00000_e5s7j failed: metastore:9083: Socket is closed by peer.
@@ -96,8 +95,6 @@ services:
     entrypoint: ["/bin/sh", "/metastore-entrypoint.sh"]  # Свой entrypoint
     networks:
       - trino-network
-
-
 
   # Trino coordinator
   trino:
