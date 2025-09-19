@@ -206,6 +206,8 @@ Once you see the `root@mariadb` terminal, enter into the cli.
 
 ```
 mysql -uroot -p"$MYSQL_ROOT_PASSWORD"
+
+psql  -U "$POSTGRES_USER" -d metastore
 ```
 
 Now that you're in the metastore's database command line interface, you can run 
