@@ -64,7 +64,7 @@ services:
     #   - metastore-db
     volumes:
       - ./metastore/metastore-site.xml:/opt/hive/conf/hive-site.xml
-      - ./postgresql-driver.jar:/opt/hive/lib/postgresql.jar
+      - ./jars/postgresql-driver.jar:/opt/hive/lib/postgresql.jar
       # - ./jars:/opt/hive/lib/
       - ./custom-entrypoint.sh:/custom-entrypoint.sh
     entrypoint: ["/bin/sh", "/custom-entrypoint.sh"]  # ← ПОЛНОСТЬЮ СВОЙ ENTRYPOINT
@@ -88,8 +88,8 @@ services:
       - ./metastore/core-site.xml:/opt/hadoop/conf/core-site.xml
       # - ./jars:/opt/hive/lib
       - ./jars/postgresql-driver.jar:/opt/hive/lib/postgresql.jar
-      - ./jars/aws-java-sdk-bundle-1.12.367.jar:/opt/hive/lib/aws-java-sdk-bundle-1.12.367.jar
-      - ./jars/hadoop-aws-3.3.6.jar:/opt/hive/lib/hadoop-aws-3.3.6.jar
+      - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar
+      - ./jars/hadoop-aws-3.2.4.jar:/opt/hive/lib/hadoop-aws-3.2.4.jar
       - ./metastore-entrypoint.sh:/metastore-entrypoint.sh
     entrypoint: ["/bin/sh", "/metastore-entrypoint.sh"]  # Свой entrypoint
     networks:
