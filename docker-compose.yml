@@ -91,9 +91,9 @@ services:
       - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar
       - ./jars/hadoop-aws-3.2.4.jar:/opt/hive/lib/hadoop-aws-3.2.4.jar
       
-      - ./jars//hadoop-common-3.2.4.jar:/opt/hive/lib//hadoop-common-3.2.4.jar
-      - ./jars//hadoop-hdfs-3.2.4.jar:/opt/hive/lib//hadoop-hdfs-3.2.4.jar
-      - ./jars//hadoop-client-3.2.4.jar:/opt/hive/lib//hadoop-client-3.2.4.jar
+      # - ./jars/hadoop-common-3.2.4.jar:/opt/hive/lib/hadoop-common-3.2.4.jar
+      # - ./jars/hadoop-hdfs-3.2.4.jar:/opt/hive/lib/hadoop-hdfs-3.2.4.jar
+      # - ./jars/hadoop-client-3.2.4.jar:/opt/hive/lib/hadoop-client-3.2.4.jar
 
 
       - ./metastore-entrypoint.sh:/metastore-entrypoint.sh
@@ -114,7 +114,7 @@ services:
       - "8080:8080"  # Trino UI
     volumes:
       # - ./trino-hive-plugin/trino-hive-476.jar:/usr/lib/trino/plugin/hive/trino-hive-476.jar
-      - ./trino-hive-plugin/lib/:/usr/lib/trino/plugin/hive/lib/
+      # - ./trino-hive-plugin/lib/:/usr/lib/trino/plugin/hive/lib/
       - ./etc:/etc/trino  # Каталог с конфигурацией Trino (catalog.properties, etc.)
     networks:
       - trino-network
