@@ -90,6 +90,12 @@ services:
       - ./jars/postgresql-driver.jar:/opt/hive/lib/postgresql.jar
       - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar
       - ./jars/hadoop-aws-3.2.4.jar:/opt/hive/lib/hadoop-aws-3.2.4.jar
+      
+      - ./jars//hadoop-common-3.2.4.jar:/opt/hive/lib//hadoop-common-3.2.4.jar
+      - ./jars//hadoop-hdfs-3.2.4.jar:/opt/hive/lib//hadoop-hdfs-3.2.4.jar
+      - ./jars//hadoop-client-3.2.4.jar:/opt/hive/lib//hadoop-client-3.2.4.jar
+
+
       - ./metastore-entrypoint.sh:/metastore-entrypoint.sh
     entrypoint: ["/bin/sh", "/metastore-entrypoint.sh"]  # Свой entrypoint
     networks:
