@@ -16,9 +16,9 @@ services:
       - trino-network
 
   # Автоматическое создание бакетов в MinIO
-  createbuckets:
+  createbuckets-service:
     image: quay.io/minio/mc:latest
-    container_name: crebuck
+    container_name: create-minio-buckets
     depends_on:
       - minio-service
     restart: on-failure
@@ -39,10 +39,11 @@ services:
     container_name: metastore-db
     environment:
       POSTGRES_DB: metastore
-      POSTGRES_USER: hive
+      POSTGRES_USER: hiveuser
       POSTGRES_PASSWORD: hivepassword
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgresql/pg_hba.conf:/etc/pg_hba.conf
     networks:
       - trino-network
     healthcheck: 

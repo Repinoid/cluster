@@ -5,7 +5,7 @@ set -e
 echo "Forcing PostgreSQL connection..."
 /opt/hive/bin/schematool -initSchema \
   -dbType postgres \
-  -userName hive \
+  -userName hiveuser \
   -passWord hivepassword \
   -url jdbc:postgresql://metastore-db:5432/metastore \
   -verbose
