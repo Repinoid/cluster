@@ -1,4 +1,4 @@
-```
+``
 trino> show catalogs;
           Catalog           
 ----------------------------
@@ -8,4 +8,4 @@ trino> show catalogs;
  tpcds                      
  tpch                       
 (5 rows)
-```
+``
