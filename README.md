@@ -13,6 +13,51 @@ check out the example project from Brian Olsen.
 По его мотивам сделал с Postgres
 <hr>
 
+### Запустите контейнеры
+- **docker compose up -d**
+### Войдите в режим командной строки контейнера trino-coordinator-container 
+- docker exec -it trino-coordinator-container trino
+### Выведите список каталогов
+```
+trino> show catalogs;
+```
+```
+          Catalog           
+----------------------------
+ minio_catalog              
+ postgres_metastore_catalog 
+ system                     
+ tpcds                      
+ tpch                       
+(5 rows)
+```
+Имена каталогов - это имена файлов .properties в ***etc/catalog***
+```
+ls -l etc/catalog/*.properties
+-rw-r--r-- 1 naeel naeel 581 Sep 20 08:51 etc/catalog/minio_catalog.properties
+-rw-r--r-- 1 naeel naeel 144 Sep 20 13:58 etc/catalog/postgres_metastore_catalog.properties
+-rw-r--r-- 1 naeel naeel  44 Sep 11 09:37 etc/catalog/tpcds.properties
+-rw-r--r-- 1 naeel naeel  42 Sep 11 09:37 etc/catalog/tpch.properties
+```
+
+### Создание schema в каталоге minio_catalog
+```
+CREATE SCHEMA minio_catalog.mini WITH (location = 's3a://tiny/');
+```
+`s3a://tiny/` - это бакет в минио, создан контейнером ***createbuckets-service*** при запуске docker compose
+Удостоверяемся:
+```
+trino> show schemas from minio_catalog;
+       Schema       
+--------------------
+ default            
+ information_schema 
+ mini
+(3 rows)
+```
+
+
+
 docker exec -it trino sh -c 'ls -l /usr/lib/trino/plugin/hive/tr*.jar'
 
 docker exec -it trino sh -c 'jar tf /usr/lib/trino/plugin/hive/lib/'
