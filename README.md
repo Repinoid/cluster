@@ -3,6 +3,8 @@
 ### В Пособии "Trino: The Definitive Guide"
 https://datafinder.ru/files/downloads/01/Trino---The-Definitive-Guide-2023.pdf есть ссылка на код  
 - https://github.com/bitsondatadev/trino-getting-started/tree/main/hive/trino-minio
+
+С примером развёртывания контейнеров Trino & Minio & Hive Metastore
 ```
 MinIO Example
 MinIO is an S3-compatible, lightweight distributed storage system you can use with
@@ -10,8 +12,8 @@ Trino and the Hive connector. You can install it on your local workstation and
 experiment with it and Trino locally. If you want to explore its use in more detail,
 check out the example project from Brian Olsen.
 ```
-где качестве БД metastore используется MariaDB (из "коробки", кстати, код не запустился)<br>
-По его мотивам сделал с Postgres<hr>
+где качестве БД metastore используется MariaDB (из "коробки", кстати, docker compose не запустился, пришлось допиливать)<br>
+По мотивам вышеуказанного сделал с Postgres<hr>
 
 ### Создаем папку jars (если не существует)
 - mkdir -p ./jars
