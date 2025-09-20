@@ -97,9 +97,9 @@ services:
       - trino-network
 
   # Trino coordinator
-  trino:
+  trino-coordinator-service:
     image: trinodb/trino:latest
-    container_name: trino
+    container_name: trino-coordinator-container
     depends_on:
       - metastore
       - minio
