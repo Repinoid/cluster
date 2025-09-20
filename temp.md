@@ -1,5 +1,7 @@
-``
+```
 trino> show catalogs;
+```
+```
           Catalog           
 ----------------------------
  minio_catalog              
@@ -8,4 +10,4 @@ trino> show catalogs;
  tpcds                      
  tpch                       
 (5 rows)
-``
+```
