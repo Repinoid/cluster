@@ -1,4 +1,3 @@
-<hr>
 ### В Пособии "Trino: The Definitive Guide"
 `https://datafinder.ru/files/downloads/01/Trino---The-Definitive-Guide-2023.pdf` есть ссылка на код  
 - https://github.com/bitsondatadev/trino-getting-started/tree/main/hive/trino-minio
@@ -10,8 +9,7 @@ experiment with it and Trino locally. If you want to explore its use in more det
 check out the example project from Brian Olsen.
 ```
 где качестве БД metastore используется MariaDB (из "коробки", кстати, не запустилось)
-По его мотивам сделал с Postgres
-<hr>
+По его мотивам сделал с Postgres<hr>
 
 ### Запустите контейнеры
 - **docker compose up -d**
