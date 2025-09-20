@@ -72,3 +72,88 @@ SELECT * FROM tpcds.sf1.store LIMIT 10;
 - В Amazon Athena использование TPC-DS коннектора для тестирования производительности Data Lake на S3 не рекомендуется — вместо этого следует использовать реальные данные в S3 .
 
 - Таким образом, коннектор TPC-DS — это удобный инструмент для разработчиков и инженеров, который позволяет быстро проверить функциональность SQL-движков и выполнить сравнительное тестирование производительности.
+
+<hr>
+```
+trino> show schemas from tpcds;
+       Schema       
+--------------------
+ information_schema 
+ sf1                
+ sf10               
+ sf100              
+ sf1000             
+ sf10000            
+ sf100000           
+ sf300              
+ sf3000             
+ sf30000            
+ tiny               
+(11 rows)
+```
+```
+trino> SHOW TABLES IN tpcds.tiny;
+         Table          
+------------------------
+ call_center            
+ catalog_page           
+ catalog_returns        
+ catalog_sales          
+ customer               
+ customer_address       
+ customer_demographics  
+ date_dim               
+ dbgen_version          
+ household_demographics 
+ income_band            
+ inventory              
+ item                   
+ promotion              
+ reason                 
+ ship_mode              
+ store                  
+ store_returns          
+ store_sales            
+ time_dim               
+ warehouse              
+ web_page               
+ web_returns            
+ web_sales              
+ web_site               
+(25 rows)
+```
+
+```
+trino> select count(*) from tpcds.tiny.customer;
+ _col0 
+-------
+  1000 
+(1 row)
+
+Query 20250920_113947_00017_xuput, FINISHED, 1 node
+Splits: 9 total, 9 done (100.00%)
+0.89 [1000 rows, 0B] [1.12K rows/s, 0B/s]
+```
+
+```
+trino> select count(*) from tpcds.sf1.customer;
+ _col0  
+--------
+ 100000 
+(1 row)
+
+Query 20250920_114121_00019_xuput, FINISHED, 1 node
+Splits: 9 total, 9 done (100.00%)
+1.24 [100K rows, 0B] [80.7K rows/s, 0B/s]
+```
+```
+trino> select count(*) from tpcds.sf10.customer;
+ _col0  
+--------
+ 500000 
+(1 row)
+
+Query 20250920_114140_00020_xuput, FINISHED, 1 node
+Splits: 9 total, 9 done (100.00%)
+4.87 [500K rows, 0B] [103K rows/s, 0B/s]
+```
