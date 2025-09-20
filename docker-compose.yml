@@ -1,8 +1,8 @@
 services:
   # MinIO для объектного хранилища
-  minio:
+  minio-service:
     image: quay.io/minio/minio:latest
-    container_name: minio
+    container_name: minio-container
     ports:
       - "9000:9000"  # S3 API
       - "9001:9001"  # Web Console
@@ -20,12 +20,12 @@ services:
     image: quay.io/minio/mc:latest
     container_name: crebuck
     depends_on:
-      - minio
+      - minio-service
     restart: on-failure
     entrypoint: >
       /bin/sh -c "
       sleep 5;
-      /usr/bin/mc alias set localminio http://minio:9000 muser mpassword;
+      /usr/bin/mc alias set localminio http://minio-service:9000 muser mpassword;
       /usr/bin/mc mb localminio/tiny;
       /usr/bin/mc mb localminio/trinod;
       exit 0;
@@ -102,7 +102,7 @@ services:
     container_name: trino-coordinator-container
     depends_on:
       - metastore
-      - minio
+      - minio-service
     ports:
       - "8080:8080"  # Trino UI
     volumes:

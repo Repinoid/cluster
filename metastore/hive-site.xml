@@ -2,7 +2,7 @@
   <!-- Минио-specific настройки -->
   <property>
     <name>fs.s3a.endpoint</name>
-    <value>http://minio:9000</value> <!-- Используем имя сервиса из docker-compose -->
+    <value>http://minio-service:9000</value> <!-- Используем имя сервиса из docker-compose -->
   </property>
 
 <!-- MUST -->
