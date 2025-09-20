@@ -35,7 +35,7 @@
 
   <!-- Остальные настройки Metastore (JDBC для PostgreSQL и т.д.) -->
 
-  
+  <!-- javax.jdo.option.ConnectionURL - это параметр конфигурации для JDO (Java Data Objects), который указывает URL (адрес) подключения к базе данных. -->
   <property>
     <name>javax.jdo.option.ConnectionURL</name>
     <value>jdbc:postgresql://metastore-db:5432/metastore</value>
