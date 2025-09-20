@@ -1,3 +1,5 @@
+**Telegram @IBM2702**
+
 # Trino & Minio & Hive Metastore w Postgres
 
 ### В Пособии "Trino: The Definitive Guide"
