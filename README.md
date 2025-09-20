@@ -1,5 +1,5 @@
 ### В Пособии "Trino: The Definitive Guide"
-`https://datafinder.ru/files/downloads/01/Trino---The-Definitive-Guide-2023.pdf` есть ссылка на код  
+https://datafinder.ru/files/downloads/01/Trino---The-Definitive-Guide-2023.pdf есть ссылка на код  
 - https://github.com/bitsondatadev/trino-getting-started/tree/main/hive/trino-minio
 ```
 MinIO Example
