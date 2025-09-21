@@ -111,6 +111,7 @@ services:
       # hive-log4j2.properties параметры логирования
       - ./hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties
 
+      # Если нет /opt/hive/lib/postgresql-42.7.8.jar - java.lang.RuntimeException: Failed to get driver instance for jdbcUrl=jdbc:postgresql://metastore-db:5432/metastore
       - ./jars/postgresql-42.7.8.jar:/opt/hive/lib/postgresql-42.7.8.jar
 
       # If no aws-java-sdk-bundle-1.11.375.jar  - 
@@ -120,19 +121,16 @@ services:
       # - ./jars/bundle-2.34.0.jar:/opt/hive/lib/bundle-2.34.0.jar 
 
       # jar tf ./jars/hadoop-aws-3.4.2.jar | grep S3AFileSystem
+  # failed: metastore:9083: Socket is closed by peer.
       - ./jars/hadoop-aws-3.4.2.jar:/opt/hive/lib/hadoop-aws-3.4.2.jar 
+      # Failed to create external path s3a://tiny/ for database mini. This may result in access not being allowed if the StorageBasedAuthorizationProvider is enabled: null
+      # - ./jars/hadoop-aws-3.2.4.jar:/opt/hive/lib/hadoop-aws-3.2.4.jar 
 
-      - ./jars/hadoop-hdfs-client-3.4.2.jar:/opt/hive/lib/hadoop-hdfs-client-3.4.2.jar
+      # - ./jars/hadoop-hdfs-client-3.4.2.jar:/opt/hive/lib/hadoop-hdfs-client-3.4.2.jar
       
       - ./metastore-entrypoint.sh:/metastore-entrypoint.sh
 
     entrypoint: ["/bin/sh", "/metastore-entrypoint.sh"]  # Свой entrypoint
-    # healthcheck:
-    #   test: ["CMD", "netstat", "-an", "|", "grep", "9083"]  # Check if Thrift port is listening
-    #   interval: 5s
-    #   timeout: 5s
-    #   retries: 10
-    #   start_period: 30s    
     networks:
       - trino-network
 
