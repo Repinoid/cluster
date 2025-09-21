@@ -38,7 +38,7 @@ services:
 
   # PostgreSQL для Hive Metastore
   metastore-db:
-    image: postgres:13
+    image: postgres:17
     container_name: metastore-db
     environment:
       TZ: Europe/Moscow
