@@ -14,7 +14,8 @@ Trino and the Hive connector. You can install it on your local workstation and
 experiment with it and Trino locally. If you want to explore its use in more detail,
 check out the example project from Brian Olsen.
 ```
-где качестве БД metastore используется MariaDB (из "коробки", кстати, docker compose не запустился, пришлось допиливать)<br>
+где качестве БД metastore используется MariaDB <br>
+(из "коробки", кстати, docker compose не запустился, пришлось допиливать)<br>
 По мотивам вышеуказанного сделал с Postgres<hr>
 
 ### Создаем папку jars (если не существует)
