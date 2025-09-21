@@ -3,13 +3,13 @@ services:
   minio-service:
     image: quay.io/minio/minio:latest
     container_name: minio-container
-    TZ: Europe/Moscow
     ports:
       - "9000:9000"  # S3 API
       - "9001:9001"  # Web Console
     environment:
       MINIO_ROOT_USER: muser
       MINIO_ROOT_PASSWORD: mpassword
+      TZ: Europe/Moscow
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"
@@ -20,7 +20,8 @@ services:
   createbuckets-service:
     image: quay.io/minio/mc:latest
     container_name: create-minio-buckets
-    TZ: Europe/Moscow
+    environment:
+      TZ: Europe/Moscow    
     depends_on:
       - minio-service
     restart: on-failure
@@ -39,8 +40,8 @@ services:
   metastore-db:
     image: postgres:13
     container_name: metastore-db
-    TZ: Europe/Moscow
     environment:
+      TZ: Europe/Moscow
       POSTGRES_DB: metastore
       POSTGRES_USER: hiveuser
       POSTGRES_PASSWORD: hivepassword
@@ -59,10 +60,12 @@ services:
     restart: unless-stopped      
 
   init-metastore:
-    image: apache/hive:4.1.0
+    image: apache/hive:4.0.1
+    # image: apache/hive:4.1.0
     # image: apache/hive:3.1.3
     container_name: init-metastore
-    TZ: Europe/Moscow
+    environment:
+      TZ: Europe/Moscow    
     depends_on:  
       metastore-db:
         condition: service_healthy  # Ждем, пока БД не станет "healthy"    
@@ -77,10 +80,12 @@ services:
 
   # Hive Metastore сервис
   metastore:
-    image: apache/hive:4.1.0
+    image: apache/hive:4.0.1
+    # image: apache/hive:4.1.0
     # image: apache/hive:3.1.3
     container_name: metastore
-    TZ: Europe/Moscow
+    environment:
+      TZ: Europe/Moscow    
     depends_on:
       init-metastore:
         condition: service_completed_successfully
@@ -118,7 +123,8 @@ services:
   trino-coordinator-service:
     image: trinodb/trino:latest
     container_name: trino-coordinator-container
-    TZ: Europe/Moscow
+    environment:
+      TZ: Europe/Moscow    
     depends_on:
       - metastore
       - minio-service
