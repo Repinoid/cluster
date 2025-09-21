@@ -115,7 +115,8 @@ services:
 
       # If no aws-java-sdk-bundle-1.11.375.jar  - 
       # Query 20250919_120728_00000_e5s7j failed: metastore:9083: Socket is closed by peer.
-      # - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar 
+      - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar 
+
       # - ./jars/bundle-2.34.0.jar:/opt/hive/lib/bundle-2.34.0.jar 
 
       # jar tf ./jars/hadoop-aws-3.4.2.jar | grep S3AFileSystem
