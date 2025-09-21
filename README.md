@@ -31,7 +31,12 @@ check out the example project from Brian Olsen.
 
 - wget -P ./jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.4.2/hadoop-aws-3.4.2.jar
 
+- wget -P ./jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.4.2/hadoop-common-3.4.2.jar
+
 - wget -P ./jars https://jdbc.postgresql.org/download/postgresql-42.7.8.jar
+
+- wget -P ./jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-hdfs-client/3.4.2/hadoop-hdfs-client-3.4.2.jar
+
 
 ### Запустите контейнеры
 - ***docker compose up -d***

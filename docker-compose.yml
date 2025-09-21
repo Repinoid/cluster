@@ -9,9 +9,10 @@ services:
     environment:
       MINIO_ROOT_USER: muser
       MINIO_ROOT_PASSWORD: mpassword
+      MINIO_LOG_LEVEL: debug
     volumes:
       - minio_data:/data
-    command: server /data --console-address ":9001"
+    command: server /data --console-address ":9001" --log-level=debug
     networks:
       - trino-network
 
@@ -35,7 +36,7 @@ services:
 
   # PostgreSQL для Hive Metastore
   metastore-db:
-    image: postgres:13
+    image: postgres:17
     container_name: metastore-db
     environment:
       POSTGRES_DB: metastore
@@ -78,6 +79,8 @@ services:
     # image: apache/hive:3.1.3
     image: apache/hive:4.0.1
     container_name: metastore
+    environment:
+      - HIVE_LOG4J2_PROPERTIES_FILE=/opt/hive/conf/hive-log4j2.properties
     depends_on:
       init-metastore:
         condition: service_completed_successfully
@@ -87,18 +90,22 @@ services:
       - ./hive-home:/home/hive  # ← Монтируем директорию
       - ./metastore/hive-site.xml:/opt/hive/conf/hive-site.xml
 
+      - ./hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties
+
       - ./jars/postgresql-42.7.8.jar:/opt/hive/lib/postgresql-42.7.8.jar
 
       # If no aws-java-sdk-bundle-1.11.375.jar  - 
       # Query 20250919_120728_00000_e5s7j failed: metastore:9083: Socket is closed by peer.
-      - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar 
-      # - ./jars/bundle-2.34.0.jar:/opt/hive/lib/bundle-2.34.0.jar 
+      # - ./jars/aws-java-sdk-bundle-1.11.375.jar:/opt/hive/lib/aws-java-sdk-bundle-1.11.375.jar 
+      - ./jars/bundle-2.34.0.jar:/opt/hive/lib/bundle-2.34.0.jar 
 
       # if not hadoop-aws-3.2.4.jar presented
       # Query 20250919_121130_00000_wr322 failed: java.lang.RuntimeException: java.lang.ClassNotFoundException: 
       # Class org.apache.hadoop.fs.s3a.S3AFileSystem not found
-      - ./jars/hadoop-aws-3.2.4.jar:/opt/hive/lib/hadoop-aws-3.2.4.jar 
+      # - ./jars/hadoop-aws-3.2.4.jar:/opt/hive/lib/hadoop-aws-3.2.4.jar 
       # - ./jars/hadoop-aws-3.4.2.jar:/opt/hive/lib/hadoop-aws-3.4.2.jar 
+      - ./jars/hadoop-aws-3.4.2.jar:/opt/hive/lib/hadoop-common-3.4.2.jar 
+      - ./jars/hadoop-hdfs-client-3.4.2.jar:/opt/hive/lib/hadoop-hdfs-client-3.4.2.jar
       
       - ./metastore-entrypoint.sh:/metastore-entrypoint.sh
 
