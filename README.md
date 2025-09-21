@@ -1,3 +1,7 @@
+schematool -dbType postgres -info
+
+
+
 **Telegram @IBM2702**
 
 # Trino & Minio & Hive Metastore w Postgres

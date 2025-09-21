@@ -3,6 +3,7 @@ set -e
 
 # Установка classpath из hadoop command
 echo "Setting up Hadoop and Hive classpath..."
+export POSTGRESQL_DRIVER_PATH="/opt/hive/lib/postgresql-42.7.8.jar"
 export HADOOP_CLASSPATH=$(/opt/hadoop/bin/hadoop classpath --glob):/opt/hive/lib/*
 export CLASSPATH=$HADOOP_CLASSPATH
 export HADOOP_HOME=/opt/hadoop
