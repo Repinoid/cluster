@@ -24,8 +24,14 @@ check out the example project from Brian Olsen.
 ### Скачиваем aws-java-sdk-bundle-1.11.375.jar
 - wget -P ./jars https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.375/aws-java-sdk-bundle-1.11.375.jar
 
+- wget -P ./jars https://repo1.maven.org/maven2/software/amazon/awssdk/bundle/2.34.0/bundle-2.34.0.jar
+
 ### Скачиваем hadoop-aws-3.2.4.jar
 - wget -P ./jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.4/hadoop-aws-3.2.4.jar
+
+- wget -P ./jars https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.4.2/hadoop-aws-3.4.2.jar
+
+- wget -P ./jars https://jdbc.postgresql.org/download/postgresql-42.7.8.jar
 
 ### Запустите контейнеры
 - ***docker compose up -d***
