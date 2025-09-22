@@ -47,7 +47,13 @@ services:
       POSTGRES_PASSWORD: hivepassword
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./postgresql/postgresql.conf:/etc/postgresql.conf
       - ./postgresql/pg_hba.conf:/etc/pg_hba.conf
+
+      - ./pg_logs:/var/log/postgresql
+
+    command: postgres -c config_file=/etc/postgresql.conf -c hba_file=/etc/pg_hba.conf      
+    
     networks:
       - trino-network
     healthcheck: 
