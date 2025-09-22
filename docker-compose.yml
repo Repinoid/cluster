@@ -65,8 +65,8 @@ services:
     # Необязательно, но хороший тон: явно сообщаем, что сервис зависит от здоровья БД
     restart: unless-stopped      
 
-  init-metastore:
-    image: apache/hive:4.0.1
+  init-metastore-db:
+    image: apache/hive:${HIVERSION}
     # image: apache/hive:4.1.0
     # image: apache/hive:3.1.3
     container_name: init-metastore
@@ -86,14 +86,14 @@ services:
 
   # Hive Metastore сервис
   metastore:
-    image: apache/hive:4.0.1
+    image: apache/hive:${HIVERSION}
     # image: apache/hive:4.1.0
     # image: apache/hive:3.1.3
     container_name: metastore
     environment:
       TZ: Europe/Moscow    
     depends_on:
-      init-metastore:
+      init-metastore-db:
         condition: service_completed_successfully
       metastore-db:
         condition: service_healthy    
