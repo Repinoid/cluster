@@ -53,7 +53,7 @@ services:
       - ./pg_logs:/var/log/postgresql
 
     command: postgres -c config_file=/etc/postgresql.conf -c hba_file=/etc/pg_hba.conf      
-    
+
     networks:
       - trino-network
     healthcheck: 
@@ -99,26 +99,14 @@ services:
         condition: service_healthy    
     volumes:
       - ./hive-home:/home/hive  # ← Монтируем директорию
-
       - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
-
       # hive-log4j2.properties параметры логирования
       - ./hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties
 
-      # Если нет /opt/hive/lib/postgresql-42.7.8.jar ERROR: PostgreSQL JDBC driver not found in /opt/hive/lib/
       - ./jars/postgresql-42.7.8.jar:/opt/hive/lib/postgresql-42.7.8.jar      
-
-      # If no aws-java-sdk-bundle-1.11.375.jar  - 
-      # Query 20250919_120728_00000_e5s7j failed: metastore:9083: Socket is closed by peer.
-      # - ./jars/bundle-2.34.0.jar:/opt/hive/lib/bundle-2.34.0.jar 
       - ./jars/aws-java-sdk-bundle-1.12.765.jar:/opt/hive/lib/aws-java-sdk-bundle-1.12.765.jar 
-
-      # if not hadoop-aws-3.2.4.jar presented
-      # Query 20250919_121130_00000_wr322 failed: java.lang.RuntimeException: java.lang.ClassNotFoundException: 
-      # Class org.apache.hadoop.fs.s3a.S3AFileSystem not found
-      # - ./jars/hadoop-aws-3.4.2.jar:/opt/hive/lib/hadoop-aws-3.4.2.jar 
       - ./jars/hadoop-aws-3.3.6.jar:/opt/hive/lib/hadoop-aws-3.3.6.jar 
-      
+    
       - ./metastore-entrypoint.sh:/metastore-entrypoint.sh
 
     entrypoint: ["/bin/sh", "/metastore-entrypoint.sh"]  # Свой entrypoint
