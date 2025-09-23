@@ -53,6 +53,7 @@ services:
       - ./pg_logs:/var/log/postgresql
 
     command: postgres -c config_file=/etc/postgresql.conf -c hba_file=/etc/pg_hba.conf      
+    # command: bash -c 'chown -R postgres:postgres /var/log/postgresql && exec postgres -c config_file=/etc/postgresql.conf -c hba_file=/etc/pg_hba.conf'    
 
     networks:
       - trino-network

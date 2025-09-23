@@ -22,6 +22,9 @@ check out the example project from Brian Olsen.
 (из "коробки", кстати, docker compose не запустился, пришлось допиливать)<br>
 По мотивам вышеуказанного сделал с Postgres<hr>
 
+### mkdir -p pg_logs && sudo chown -R 999:999 pg_logs
+
+
 ### Создаем папку jars (если не существует)
 - mkdir -p ./jars
 
