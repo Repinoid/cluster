@@ -13,4 +13,6 @@
 *.tar.gz
 *.rar
 
+ys3.properties
+
 #jars/
