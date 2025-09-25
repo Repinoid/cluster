@@ -43,7 +43,7 @@ services:
     environment:
       TZ: Europe/Moscow
       POSTGRES_DB: metastore
-      POSTGRES_USER: hiveuser
+      POSTGRES_USER: hiveuser    
       POSTGRES_PASSWORD: hivepassword
     volumes:
       - postgres_data:/var/lib/postgresql/data
