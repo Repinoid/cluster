@@ -99,8 +99,8 @@ services:
       metastore-db:
         condition: service_healthy    
     volumes:
-      - ./hive-home:/home/hive  # ← Монтируем директорию
       - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
+      - ./hive-home:/home/hive  # ← Монтируем директорию
       # hive-log4j2.properties параметры логирования
       - ./hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties
 
