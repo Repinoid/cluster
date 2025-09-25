@@ -1,37 +1,5 @@
 <configuration>
-  <!-- Минио-specific настройки -->
-  <property>
-    <name>fs.s3a.endpoint</name>
-    <value>http://minio-service:9000</value> <!-- Используем имя сервиса из docker-compose -->
-  </property>
-
-<!-- MUST -->
-  <property>
-    <name>fs.s3a.path.style.access</name>
-    <value>true</value> 
-  </property>
-
-  <!-- if http - необязательно
-  <property >
-    <name>fs.s3a.connection.ssl.enabled</name>
-    <value>false</value> 
-  </property> 
-  -->
-
-  <property>
-    <name>fs.s3a.access.key</name>
-    <value>muser</value> <!-- Учетные данные MinIO (MINIO_ROOT_USER) -->
-  </property>
-  <property>
-    <name>fs.s3a.secret.key</name>
-    <value>mpassword</value> <!-- Учетные данные MinIO (MINIO_ROOT_PASSWORD) -->
-  </property>
-
-  <!-- Настройка реализации файловой системы для схемы S3 - работает и без
-  <property>
-    <name>fs.s3a.impl</name>
-    <value>org.apache.hadoop.fs.s3a.S3AFileSystem</value>
-  </property>-->
+  
 
   <!-- Остальные настройки Metastore (JDBC для PostgreSQL и т.д.) -->
 
