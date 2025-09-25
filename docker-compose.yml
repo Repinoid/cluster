@@ -77,7 +77,8 @@ services:
       metastore-db:
         condition: service_healthy  # Ждем, пока БД не станет "healthy"    
     volumes:
-      - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
+      # - ./metastore/javaxjdo.xml:/opt/hive/conf/javaxjdo.xml
+      # - ./metastore:/opt/hive/conf
       - ./jars/postgresql-42.7.8.jar:/opt/hive/lib/postgresql-42.7.8.jar
       - ./initm-entrypoint.sh:/entrypoint.sh
     entrypoint: ["/bin/sh", "/entrypoint.sh"]  # ← ПОЛНОСТЬЮ СВОЙ ENTRYPOINT
@@ -99,10 +100,12 @@ services:
       metastore-db:
         condition: service_healthy    
     volumes:
+      # - ./metastore:/opt/hive/conf
       - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
+      - ./metastore/javaxjdo.xml:/opt/hive/conf/javaxjdo.xml
       - ./hive-home:/home/hive  # ← Монтируем директорию
       # hive-log4j2.properties параметры логирования
-      - ./hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties
+      - .//metastore/hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties:ro
 
       - ./jars/postgresql-42.7.8.jar:/opt/hive/lib/postgresql-42.7.8.jar      
       - ./jars/aws-java-sdk-bundle-1.12.765.jar:/opt/hive/lib/aws-java-sdk-bundle-1.12.765.jar 
