@@ -102,6 +102,7 @@ services:
 
       - ./metastore/hive-site.xml:/opt/hive/conf/hive-site.xml
       # - ./metastore/minio-site.xml:/opt/hive/conf/minio-site.xml
+      - ./metastore/ys3-site.xml:/opt/hive/conf/ys3-site.xml
 
       # hive-log4j2.properties параметры логирования
       - ./hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties
@@ -129,7 +130,7 @@ services:
       - "8080:8080"  # Trino UI
     volumes:
       - ./etc:/etc/trino  # Каталог с конфигурацией Trino (catalog.properties, etc.)
-      - ./metastore/minio-site.xml:/etc/hadoop/conf/minio-site.xml
+      - ./metastore/y3s-site.xml:/etc/hadoop/conf/y3s-site.xml
     networks:
       - trino-network
 
