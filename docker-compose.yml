@@ -101,7 +101,7 @@ services:
       - ./hive-home:/home/hive  # ← Монтируем директорию
 
       - ./metastore/hive-site.xml:/opt/hive/conf/hive-site.xml
-      - ./metastore/minio-site.xml:/opt/hive/conf/minio-site.xml
+      # - ./metastore/minio-site.xml:/opt/hive/conf/minio-site.xml
 
       # hive-log4j2.properties параметры логирования
       - ./hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties
