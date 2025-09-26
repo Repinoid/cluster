@@ -13,6 +13,7 @@
     <value>org.postgresql.Driver</value>
   </property>
 
+<!-- UserName Password of metastore-db; image: postgres -->
   <property>
     <name>javax.jdo.option.ConnectionUserName</name>
     <value>hiveuser</value>
@@ -32,13 +33,13 @@
   <value>org.apache.hadoop.hive.ql.security.authorization.MetaStoreAuthzAPIAuthorizerEmbedOnly</value>
 </property> -->
 
-  <property>
+  <!-- <property>
     <name>hive.metastore.pre.event.listeners</name>
     <value>org.apache.hadoop.hive.ql.security.authorization.AuthorizationPreEventListener</value>
   </property>
   <property>
     <name>hive.security.metastore.authorization.manager</name>
     <value>org.apache.hadoop.hive.ql.security.authorization.StorageBasedAuthorizationProvider</value>
-  </property>  
+  </property>   -->
   
 </configuration>
