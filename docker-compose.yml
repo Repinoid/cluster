@@ -93,6 +93,8 @@ services:
     container_name: metastore
     environment:
       TZ: Europe/Moscow    
+      AWS_ACCESS_KEY_ID: muser
+      AWS_SECRET_ACCESS_KEY: mpassword      
     depends_on:
       init-metastore-db:
         condition: service_completed_successfully

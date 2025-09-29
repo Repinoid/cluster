@@ -83,7 +83,7 @@ WITH (
     format = 'ORC',
     external_location = 's3a://tiny/customer/'
 ) 
-AS SELECT * FROM tpch.tiny.customer;
+AS SELECT * FROM tpch.tiny.customer limit 10;
 ```
 
 ### Откроем второе окно с командной строкой и войдём в контейнер metastore-db
