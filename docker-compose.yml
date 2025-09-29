@@ -117,9 +117,9 @@ services:
       - trino-network
 
   # Trino coordinator
-  trino-coordinator-service:
+  trin:
     image: trinodb/trino:latest
-    container_name: trino-coordinator-container
+    container_name: trin
     environment:
       TZ: Europe/Moscow    
     depends_on:

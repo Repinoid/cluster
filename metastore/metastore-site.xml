@@ -1,15 +1,16 @@
 <configuration>
+
   <!-- Минио-specific настройки -->
-  <property>
+  <!-- <property>
     <name>fs.s3a.endpoint</name>
-    <value>http://minio-service:9000</value> <!-- Используем имя сервиса из docker-compose -->
-  </property>
+    <value>http://minio-service:9000</value> 
+  </property> -->
 
 <!-- MUST -->
-  <property>
+  <!-- <property>
     <name>fs.s3a.path.style.access</name>
     <value>true</value> 
-  </property>
+  </property> -->
 
   <!-- if http - необязательно
   <property >
@@ -27,14 +28,14 @@
     <value>${AWS_SECRET_ACCESS_KEY}</value>
   </property> -->
 
-  <property>
+  <!-- <property>
     <name>fs.s3a.access.key</name>
     <value>muser</value> 
   </property>
   <property>
     <name>fs.s3a.secret.key</name>
     <value>mpassword</value> 
-  </property>
+  </property> -->
 
   <!-- Настройка реализации файловой системы для схемы S3 - работает и без
   <property>
@@ -73,13 +74,13 @@
   <value>org.apache.hadoop.hive.ql.security.authorization.MetaStoreAuthzAPIAuthorizerEmbedOnly</value>
 </property> -->
 
-  <property>
+  <!-- <property>
     <name>hive.metastore.pre.event.listeners</name>
     <value>org.apache.hadoop.hive.ql.security.authorization.AuthorizationPreEventListener</value>
   </property>
   <property>
     <name>hive.security.metastore.authorization.manager</name>
     <value>org.apache.hadoop.hive.ql.security.authorization.StorageBasedAuthorizationProvider</value>
-  </property>  
+  </property>   -->
   
 </configuration>
