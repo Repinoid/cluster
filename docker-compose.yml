@@ -102,7 +102,6 @@ services:
 
       - ./metastore/hive-site.xml:/opt/hive/conf/hive-site.xml
       # - ./metastore/minio-site.xml:/opt/hive/conf/minio-site.xml
-      - ./metastore/ys3-site.xml:/opt/hive/conf/ys3-site.xml
 
       # hive-log4j2.properties параметры логирования
       - ./hive-log4j2.properties:/opt/hive/conf/hive-log4j2.properties
@@ -120,9 +119,15 @@ services:
   # Trino coordinator
   trino-coordinator-service:
     image: trinodb/trino:latest
-    container_name: trino-coordinator-container
+    container_name: trin
     environment:
       TZ: Europe/Moscow    
+
+      # S3_ENDPOINT:    ${S3_ENDPOINT} - пишут что для AWS не надо, формируется само исходя из S3_REGION
+      S3_REGION:          ${AWS3_REGION}
+      AWS_ACCESS_KEY_ID:  ${AWS3_ACCESS_KEY}
+      AWS_SECRET_KEY:     ${AWS3_SECRET_KEY}  
+
     depends_on:
       - metastore
       - minio-service
