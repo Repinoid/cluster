@@ -15,5 +15,7 @@
 
 #jars/
 
+.env
+
 
 etc/catalog/minio_catalog.properties
