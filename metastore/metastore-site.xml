@@ -28,14 +28,14 @@
     <value>${AWS_SECRET_ACCESS_KEY}</value>
   </property> -->
 
-  <!-- <property>
+  <property>
     <name>fs.s3a.access.key</name>
     <value>muser</value> 
   </property>
   <property>
     <name>fs.s3a.secret.key</name>
     <value>mpassword</value> 
-  </property> -->
+  </property>
 
   <!-- Настройка реализации файловой системы для схемы S3 - работает и без
   <property>
