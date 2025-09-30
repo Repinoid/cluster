@@ -81,7 +81,7 @@ trino> show schemas from minio_catalog;
 CREATE TABLE minio_catalog.mini.client
 WITH (
     format = 'ORC',
-    external_location = 's3a://tiny/customer/'
+    location = 's3a://tiny/customer/'
 ) 
 AS SELECT * FROM tpch.tiny.customer limit 10;
 ```

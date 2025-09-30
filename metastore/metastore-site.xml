@@ -1,5 +1,22 @@
 <configuration>
 
+ <!-- <property>
+        <name>metastore.thrift.uris</name>
+        <value>thrift://hive-metastore:9083</value>
+        <description>Thrift URI for the remote metastore. Used by metastore client to connect to remote metastore.</description>
+    </property>
+
+    <property>
+        <name>metastore.task.threads.always</name>
+        <value>org.apache.hadoop.hive.metastore.events.EventCleanerTask,org.apache.hadoop.hive.metastore.MaterializationsCacheCleanerTask</value>
+    </property>
+
+    <property>
+        <name>metastore.expression.proxy</name>
+        <value>org.apache.hadoop.hive.metastore.DefaultPartitionExpressionProxy</value>
+    </property> -->
+
+
   <!-- Минио-specific настройки -->
   <!-- <property>
     <name>fs.s3a.endpoint</name>
@@ -27,7 +44,7 @@
     <name>fs.s3a.secret.key</name>
     <value>${AWS_SECRET_ACCESS_KEY}</value>
   </property> -->
-
+<!-- 
   <property>
     <name>fs.s3a.access.key</name>
     <value>muser</value> 
@@ -35,7 +52,22 @@
   <property>
     <name>fs.s3a.secret.key</name>
     <value>mpassword</value> 
+  </property>-->
+
+  <!-- <property>
+    <name>fs.s3a.endpoint</name>
+    <value>http://minio:9000</value>
   </property>
+
+  <property>
+    <name>fs.s3a.region</name>
+    <value>eu-central-1</value>
+  </property> -->
+
+  <property>
+      <name>fs.s3a.path.style.access</name>
+      <value>true</value>
+  </property>   
 
   <!-- Настройка реализации файловой системы для схемы S3 - работает и без
   <property>
@@ -84,3 +116,5 @@
   </property>   -->
   
 </configuration>
+
+
