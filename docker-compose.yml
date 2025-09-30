@@ -49,6 +49,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
       - ./postgresql/postgresql.conf:/etc/postgresql.conf
       - ./postgresql/pg_hba.conf:/etc/pg_hba.conf
+      - ./iceberg-setup.sql:/docker-entrypoint-initdb.d/iceberg-setup.sql
 
       - ./pg_logs:/var/log/postgresql
 
