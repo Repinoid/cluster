@@ -1,4 +1,14 @@
+x-minio-env: &minio-env
+  MINIO_ROOT_USER:      ${MINIO_USER}
+  MINIO_ROOT_PASSWORD:  ${MINIO_PASSWORD}
+
+x-mdb-env: &mdb-env
+  POSTGRES_USER:      ${MDB_USER}
+  POSTGRES_PASSWORD:  ${MDB_PASSWORD}
+
+
 services:
+
   # MinIO для объектного хранилища
   minio-service:
     image: quay.io/minio/minio:latest
@@ -7,8 +17,10 @@ services:
       - "9000:9000"  # S3 API
       - "9001:9001"  # Web Console
     environment:
-      MINIO_ROOT_USER: muser
-      MINIO_ROOT_PASSWORD: mpassword
+      <<: *minio-env
+      # MINIO_ROOT_USER:      ${MINIO_USER}
+      # MINIO_ROOT_PASSWORD:  ${MINIO_PASSWORD}
+
       TZ: Europe/Moscow
     volumes:
       - minio_data:/data
@@ -28,7 +40,7 @@ services:
     entrypoint: >
       /bin/sh -c "
       sleep 5;
-      /usr/bin/mc alias set localminio http://minio-service:9000 muser mpassword;
+      /usr/bin/mc alias set localminio http://minio-service:9000 ${MINIO_USER} ${MINIO_PASSWORD};
       /usr/bin/mc mb localminio/tiny;
       /usr/bin/mc mb localminio/trinod;
       exit 0;
@@ -41,10 +53,11 @@ services:
     image: postgres:17
     container_name: metastore-db
     environment:
-      TZ: Europe/Moscow
-      POSTGRES_DB: metastore
-      POSTGRES_USER: hiveuser
-      POSTGRES_PASSWORD: hivepassword
+      TZ:                 Europe/Moscow
+      POSTGRES_DB:        metastore
+      <<: *mdb-env
+      # POSTGRES_USER:      ${MDB_USER}
+      # POSTGRES_PASSWORD:  ${MDB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgresql/postgresql.conf:/etc/postgresql.conf
@@ -67,29 +80,20 @@ services:
     # Необязательно, но хороший тон: явно сообщаем, что сервис зависит от здоровья БД
     restart: unless-stopped      
 
-  # init-metastore-db:
-  #   image: apache/hive:${HIVERSION}
-  #   container_name: init-metastore-db
-  #   environment:
-  #     TZ: Europe/Moscow    
-  #   depends_on:  
-  #     metastore-db:
-  #       condition: service_healthy  # Ждем, пока БД не станет "healthy"    
-  #   volumes:
-  #     - ./metastore/metastore-site.xml:/opt/hive/conf/metastore-site.xml
-  #     - ./initm-entrypoint.sh:/entrypoint.sh
-  #   entrypoint: ["/bin/sh", "/entrypoint.sh"]  # ← ПОЛНОСТЬЮ СВОЙ ENTRYPOINT
-  #   networks:
-  #     - trino-network
-  #   # restart: on-failure
-
-
   # Trino coordinator
   trin:
     image: trinodb/trino:latest
     container_name: trin
     environment:
-      TZ: Europe/Moscow    
+      TZ: Europe/Moscow  
+      <<: [*minio-env,*mdb-env]
+      # MUSER:      ${MINIO_USER}
+      # MPASSWORD:  ${MINIO_PASSWORD}
+
+      # POSTGRES_USER:      ${MDB_USER}
+      # POSTGRES_PASSWORD:  ${MDB_PASSWORD}
+
+
     depends_on:
       # - metastore
       - minio-service
